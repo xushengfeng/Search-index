@@ -54,103 +54,106 @@ document.getElementById('S').innerHTML = Stext
 
 Select = document.getElementById('mySelect');
 
+// 切换搜索项目
 function choose(chanse) {
     $('.s').each(function () {
         this.style.color = '#0008'
     })
-    $('#' + chanse).css('color','#000')
+    $('#' + chanse).css('color', '#000')
 
     html = ''
-        for (n in search[chanse]) {
-            if (localStorage.indexEngine == n) {
-                html += '<option selected value="' + search[chanse][n] + '">' + n + '</option>'
-            } else {
-                html += '<option value="' + search[chanse][n] + '">' + n + '</option>'
+    for (n in search[chanse]) {
+        if (localStorage.indexEngine == n) {
+            html += '<option selected value="' + search[chanse][n] + '">' + n + '</option>'
+        } else {
+            html += '<option value="' + search[chanse][n] + '">' + n + '</option>'
+        }
+
+    }
+    Select.innerHTML = html
+    $("#text").focus();
+}
+choose('综合');
+
+
+// 搜索
+function go() {
+    var x = document.getElementById("mySelect").selectedIndex;
+    var y = document.getElementById("mySelect").options;
+    var text = document.getElementById("text").value;
+    //判断网址
+    var re = new RegExp(/(\.com|\.edu|\.gov|\.int|\.mil|\.net|\.org|\.biz|\.info|\.pro|\.name|\.museum|\.coop|\.aero|\.xxx|\.idv|\.ac|\.ad|\.ae|\.af|\.ag|\.ai|\.al|\.am|\.an|\.ao|\.aq|\.ar|\.as|\.at|\.au|\.aw|\.az|\.ba|\.bb|\.bd|\.be|\.bf|\.bg|\.bh|\.bi|\.bj|\.bm|\.bn|\.bo|\.br|\.bs|\.bt|\.bv|\.bw|\.by|\.bz|\.ca|\.cc|\.cd|\.cf|\.cg|\.ch|\.ci|\.ck|\.cl|\.cm|\.cn|\.co|\.cr|\.cu|\.cv|\.cx|\.cy|\.cz|\.de|\.dj|\.dk|\.dm|\.do|\.dz|\.ec|\.ee|\.eg|\.eh|\.er|\.es|\.et|\.eu|\.fi|\.fj|\.fk|\.fm|\.fo|\.fr|\.ga|\.gd|\.ge|\.gf|\.gg|\.gh|\.gi|\.gl|\.gm|\.gn|\.gp|\.gq|\.gr|\.gs|\.gt|\.gu|\.gw|\.gy|\.hk|\.hm|\.hn|\.hr|\.ht|\.hu|\.id|\.ie|\.il|\.im|\.in|\.io|\.iq|\.ir|\.is|\.it|\.je|\.jm|\.jo|\.jp|\.ke|\.kg|\.kh|\.ki|\.km|\.kn|\.kp|\.kr|\.kw|\.ky|\.kz|\.la|\.lb|\.lc|\.li|\.lk|\.lr|\.ls|\.lt|\.lu|\.lv|\.ly|\.ma|\.mc|\.md|\.mg|\.mh|\.mk|\.ml|\.mm|\.mn|\.mo|\.mp|\.mq|\.mr|\.ms|\.mt|\.mu|\.mv|\.mw|\.mx|\.my|\.mz|\.na|\.nc|\.ne|\.nf|\.ng|\.ni|\.nl|\.no|\.np|\.nr|\.nu|\.nz|\.om|\.pa|\.pe|\.pf|\.pg|\.ph|\.pk|\.pl|\.pm|\.pn|\.pr|\.ps|\.pt|\.pw|\.py|\.qa|\.re|\.ro|\.ru|\.rw|\.sa|\.sb|\.sc|\.sd|\.se|\.sg|\.sh|\.si|\.sj|\.sk|\.sl|\.sm|\.sn|\.so|\.sr|\.st|\.sv|\.sy|\.sz|\.tc|\.td|\.tf|\.tg|\.th|\.tj|\.tk|\.tl|\.tm|\.tn|\.to|\.tp|\.tr|\.tt|\.tv|\.tw|\.tz|\.ua|\.ug|\.uk|\.um|\.us|\.uy|\.uz|\.va|\.vc|\.ve|\.vg|\.vi|\.vn|\.vu|\.wf|\.ws|\.ye|\.yt|\.yu|\.yr|\.za|\.zm|\.zw)($|\/)/, 'g');
+
+    if (re.test(text)) {
+        window.open('https://' + text)
+    } else {
+        window.open(y[x].value.replace('%s', text))
+    }
+
+    localStorage.indexEngine = y[x].innerHTML
+}
+
+
+// 快速删除
+document.getElementById('text').oninput = () => {
+    if (document.getElementById('text').value.indexOf('xxx') != -1) {
+        document.getElementById('text').value = ''
+    }
+}
+
+
+// 搜索建议
+document.getElementById('text').oninput = () => {
+    if (document.getElementById('text').value != '') {
+        $.ajax({
+            async: false,
+            url: 'http://suggestion.baidu.com/su?wd=' + document.getElementById('text').value + '&json=1&p=3&cb=show_sg',
+            type: "GET",
+            dataType: 'jsonp',
+            error: (data) => {
+                show_sg()
             }
-
-        }
-        Select.innerHTML = html
+        });
+    } else {
+        document.getElementById('suggestion').innerHTML = ''
     }
-    choose('综合');
+}
 
-
-    // 搜索
-    function go() {
-        var x = document.getElementById("mySelect").selectedIndex;
-        var y = document.getElementById("mySelect").options;
-        var text = document.getElementById("text").value;
-        var re = '/^(f|ht){1}(tp|tps):\\/\\/([\\w-]+\\.)+[\\w-]+(\\/[\\w- ./?%&=]*)?/g';
-
-        if (text.indexOf(re) != -1) {
-            window.open('https://' + text)
-        } else {
-            window.open(y[x].value.replace('%s', text))
-        }
-
-        localStorage.indexEngine = y[x].innerHTML
+// 搜索建议展示
+function show_sg(suggestion_data) {
+    var x = ''
+    for (i in suggestion_data.s) {
+        x += '<div class="sg_item" onclick="go_sg(&#39;' + suggestion_data.s[i] + '&#39;)">' + suggestion_data.s[i] + '</div>'
     }
+    document.getElementById('suggestion').innerHTML = x
+}
+
+// 搜索建议跳转
+function go_sg(link) {
+    document.getElementById('text').value = link
+    go()
+}
 
 
-    // 快速删除
-    document.getElementById('text').oninput = () => {
-        if (document.getElementById('text').value.indexOf('xxx') != -1) {
-            document.getElementById('text').value = ''
-        }
-    }
-
-
-    // 搜索建议
-    document.getElementById('text').oninput = () => {
-        if (document.getElementById('text').value != '') {
-            $.ajax({
-                async: false,
-                url: 'http://suggestion.baidu.com/su?wd=' + document.getElementById('text').value + '&json=1&p=3&cb=show_sg',
-                type: "GET",
-                dataType: 'jsonp',
-                error: (data) => {
-                    show_sg()
-                }
-            });
-        } else {
-            document.getElementById('suggestion').innerHTML = ''
-        }
-    }
-
-    // 搜索建议展示
-    function show_sg(suggestion_data) {
-        var x = ''
-        for (i in suggestion_data.s) {
-            x += '<div class="sg_item" onclick="go_sg(&#39;' + suggestion_data.s[i] + '&#39;)">' + suggestion_data.s[i] + '</div>'
-        }
-        document.getElementById('suggestion').innerHTML = x
-    }
-
-    // 搜索建议跳转
-    function go_sg(link) {
-        document.getElementById('text').value = link
+// 快捷键
+document.onkeyup = function (e) {
+    var event = e || window.event;
+    var key = event.which || event.keyCode || event.charCode;
+    if (key == 13) { // enter搜索
         go()
-    }
-
-
-    // 快捷键
-    document.onkeyup = function (e) {
-        var event = e || window.event;
-        var key = event.which || event.keyCode || event.charCode;
-        if (key == 13) { // enter搜索
-            go()
-        } else if (key == 38) { // 向上切引擎
-            if ($("#mySelect option:selected").prev().val() != undefined) {
-                $('#mySelect').val($("#mySelect option:selected").prev().val())
-            } else {
-                $('#mySelect').val($("#mySelect option").last().val())
-            }
-        } else if (key == 40) { // 向下切引擎
-            if ($("#mySelect option:selected").next().val() != undefined) {
-                $('#mySelect').val($("#mySelect option:selected").next().val())
-            } else {
-                $('#mySelect').val($("#mySelect option").first().val())
-            }
-        } else if (key == 191) { // /聚焦
-            $("#text").focus();
+    } else if (key == 38) { // 向上切引擎
+        if ($("#mySelect option:selected").prev().val() != undefined) {
+            $('#mySelect').val($("#mySelect option:selected").prev().val())
+        } else {
+            $('#mySelect').val($("#mySelect option").last().val())
         }
-    };
+    } else if (key == 40) { // 向下切引擎
+        if ($("#mySelect option:selected").next().val() != undefined) {
+            $('#mySelect').val($("#mySelect option:selected").next().val())
+        } else {
+            $('#mySelect').val($("#mySelect option").first().val())
+        }
+    } else if (key == 191) { // /聚焦
+        $("#text").focus();
+    }
+};
