@@ -48,104 +48,109 @@ search = { // 引擎列表
 Stext = ''
 for (i in search) {
     ii = "'" + i + "'"
-    Stext += '<a onclick="choose(' + ii + ')"><div class="s">' + i + '</div></a>'
+    Stext += '<a onclick="choose(' + ii + ')"><div class="s" id="' + i + '">' + i + '</div></a>'
 }
 document.getElementById('S').innerHTML = Stext
 
 Select = document.getElementById('mySelect');
 
 function choose(chanse) {
+    $('.s').each(function () {
+        this.style.color = '#0008'
+    })
+    $('#' + chanse).css('color','#000')
+
     html = ''
-    for (n in search[chanse]) {
-        if (localStorage.indexEngine == n) {
-            html += '<option selected value="' + search[chanse][n] + '">' + n + '</option>'
-        } else {
-            html += '<option value="' + search[chanse][n] + '">' + n + '</option>'
-        }
-
-    }
-    Select.innerHTML = html
-}
-choose('综合');
-
-
-// 搜索
-function go() {
-    var x = document.getElementById("mySelect").selectedIndex;
-    var y = document.getElementById("mySelect").options;
-    var text = document.getElementById("text").value;
-    var re = '/^(f|ht){1}(tp|tps):\\/\\/([\\w-]+\\.)+[\\w-]+(\\/[\\w- ./?%&=]*)?/g';
-
-    if (text.indexOf(re) != -1) {
-        window.open('https://' + text)
-    } else {
-        window.open(y[x].value.replace('%s', text))
-    }
-
-    localStorage.indexEngine = y[x].innerHTML
-}
-
-
-// 快速删除
-document.getElementById('text').oninput = () => {
-    if (document.getElementById('text').value.indexOf('xxx') != -1) {
-        document.getElementById('text').value = ''
-    }
-}
-
-
-// 搜索建议
-document.getElementById('text').oninput = () => {
-    if (document.getElementById('text').value != '') {
-        $.ajax({
-            async: false,
-            url: 'http://suggestion.baidu.com/su?wd=' + document.getElementById('text').value + '&json=1&p=3&cb=show_sg',
-            type: "GET",
-            dataType: 'jsonp',
-            error: (data) => {
-                show_sg()
+        for (n in search[chanse]) {
+            if (localStorage.indexEngine == n) {
+                html += '<option selected value="' + search[chanse][n] + '">' + n + '</option>'
+            } else {
+                html += '<option value="' + search[chanse][n] + '">' + n + '</option>'
             }
-        });
-    } else {
-        document.getElementById('suggestion').innerHTML = ''
+
+        }
+        Select.innerHTML = html
     }
-}
+    choose('综合');
 
-// 搜索建议展示
-function show_sg(suggestion_data) {
-    var x = ''
-    for (i in suggestion_data.s) {
-        x += '<div class="sg_item" onclick="go_sg(&#39;' + suggestion_data.s[i] + '&#39;)">' + suggestion_data.s[i] + '</div>'
+
+    // 搜索
+    function go() {
+        var x = document.getElementById("mySelect").selectedIndex;
+        var y = document.getElementById("mySelect").options;
+        var text = document.getElementById("text").value;
+        var re = '/^(f|ht){1}(tp|tps):\\/\\/([\\w-]+\\.)+[\\w-]+(\\/[\\w- ./?%&=]*)?/g';
+
+        if (text.indexOf(re) != -1) {
+            window.open('https://' + text)
+        } else {
+            window.open(y[x].value.replace('%s', text))
+        }
+
+        localStorage.indexEngine = y[x].innerHTML
     }
-    document.getElementById('suggestion').innerHTML = x
-}
-
-// 搜索建议跳转
-function go_sg(link) {
-    document.getElementById('text').value = link
-    go()
-}
 
 
-// 快捷键
-document.onkeyup = function (e) {
-    var event = e || window.event;
-    var key = event.which || event.keyCode || event.charCode;
-    if (key == 13) { // enter搜索
+    // 快速删除
+    document.getElementById('text').oninput = () => {
+        if (document.getElementById('text').value.indexOf('xxx') != -1) {
+            document.getElementById('text').value = ''
+        }
+    }
+
+
+    // 搜索建议
+    document.getElementById('text').oninput = () => {
+        if (document.getElementById('text').value != '') {
+            $.ajax({
+                async: false,
+                url: 'http://suggestion.baidu.com/su?wd=' + document.getElementById('text').value + '&json=1&p=3&cb=show_sg',
+                type: "GET",
+                dataType: 'jsonp',
+                error: (data) => {
+                    show_sg()
+                }
+            });
+        } else {
+            document.getElementById('suggestion').innerHTML = ''
+        }
+    }
+
+    // 搜索建议展示
+    function show_sg(suggestion_data) {
+        var x = ''
+        for (i in suggestion_data.s) {
+            x += '<div class="sg_item" onclick="go_sg(&#39;' + suggestion_data.s[i] + '&#39;)">' + suggestion_data.s[i] + '</div>'
+        }
+        document.getElementById('suggestion').innerHTML = x
+    }
+
+    // 搜索建议跳转
+    function go_sg(link) {
+        document.getElementById('text').value = link
         go()
-    } else if (key == 38) { // 向上切引擎
-        if ($("#mySelect option:selected").prev().val() != undefined) {
-            $('#mySelect').val($("#mySelect option:selected").prev().val())
-        } else {
-            $('#mySelect').val($("#mySelect option").last().val())
-        }
-    } else if (key == 40) { // 向下切引擎
-        if ($("#mySelect option:selected").next().val() != undefined) {
-            $('#mySelect').val($("#mySelect option:selected").next().val())
-        } else {
-            $('#mySelect').val($("#mySelect option").first().val())
-        }
-    } else if (key == 191) { // /聚焦
-        $("#text").focus();
     }
-};
+
+
+    // 快捷键
+    document.onkeyup = function (e) {
+        var event = e || window.event;
+        var key = event.which || event.keyCode || event.charCode;
+        if (key == 13) { // enter搜索
+            go()
+        } else if (key == 38) { // 向上切引擎
+            if ($("#mySelect option:selected").prev().val() != undefined) {
+                $('#mySelect').val($("#mySelect option:selected").prev().val())
+            } else {
+                $('#mySelect').val($("#mySelect option").last().val())
+            }
+        } else if (key == 40) { // 向下切引擎
+            if ($("#mySelect option:selected").next().val() != undefined) {
+                $('#mySelect').val($("#mySelect option:selected").next().val())
+            } else {
+                $('#mySelect').val($("#mySelect option").first().val())
+            }
+        } else if (key == 191) { // /聚焦
+            $("#text").focus();
+        }
+    };
