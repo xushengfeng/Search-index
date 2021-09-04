@@ -110,21 +110,21 @@ document.getElementById('text').oninput = function () {
 document.onkeyup = function (e) {
     var event = e || window.event;
     var key = event.which || event.keyCode || event.charCode;
-    if (key == 13) {
+    if (key == 13) { // enter搜索
         go()
-    } else if (key == 38) {
+    } else if (key == 38) { // 向上切引擎
         if ($("#mySelect option:selected").prev().val() != undefined) {
             $('#mySelect').val($("#mySelect option:selected").prev().val())
         } else {
             $('#mySelect').val($("#mySelect option").last().val())
         }
-    } else if (key == 40) {
+    } else if (key == 40) { // 向下切引擎
         if ($("#mySelect option:selected").next().val() != undefined) {
             $('#mySelect').val($("#mySelect option:selected").next().val())
         } else {
             $('#mySelect').val($("#mySelect option").first().val())
         }
-    } else if (key == 32) {
+    } else if (key == 191) { // /聚焦
         $("#text").focus();
     }
 };
