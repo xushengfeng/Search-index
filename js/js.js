@@ -85,26 +85,47 @@ function go() {
     localStorage.indexEngine = y[x].innerHTML
 }
 
-function get(url) {
-    $.ajax({
-        url: url,
-        type: "GET",
-        async: false,
-        success: function (data) {
-            window.data = data;
-        }
-    });
-    return data;
-}
 
 // 快速删除
-document.getElementById('text').oninput = function () {
+document.getElementById('text').oninput = () => {
     if (document.getElementById('text').value.indexOf('xxx') != -1) {
         document.getElementById('text').value = ''
     }
-
-    // list = get('http://suggestion.baidu.com/su?wd=' + document.getElementById('text').value + '&json=1&p=3&cb=boottomSuggestion').s
 }
+
+
+// 搜索建议
+document.getElementById('text').oninput = () => {
+    if (document.getElementById('text').value != '') {
+        $.ajax({
+            async: false,
+            url: 'http://suggestion.baidu.com/su?wd=' + document.getElementById('text').value + '&json=1&p=3&cb=show_sg',
+            type: "GET",
+            dataType: 'jsonp',
+            error: (data) => {
+                show_sg()
+            }
+        });
+    } else {
+        document.getElementById('suggestion').innerHTML = ''
+    }
+}
+
+// 搜索建议展示
+function show_sg(suggestion_data) {
+    var x = ''
+    for (i in suggestion_data.s) {
+        x += '<div class="sg_item" onclick="go_sg(&#39;' + suggestion_data.s[i] + '&#39;)">' + suggestion_data.s[i] + '</div>'
+    }
+    document.getElementById('suggestion').innerHTML = x
+}
+
+// 搜索建议跳转
+function go_sg(link) {
+    document.getElementById('text').value = link
+    go()
+}
+
 
 // 快捷键
 document.onkeyup = function (e) {

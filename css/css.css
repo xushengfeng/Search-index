@@ -3,37 +3,53 @@
     --color: #000;
     --shadow-color: #9993;
     --heigth: 80px;
-  }
-html{
+    --font: 24px;
+}
+
+html {
     background: var(--bg-color);
 }
-#S{
-    width: 100%;
-    /*! height: var(--heigth); */
-    margin: 100px 0 40px 0;
+
+#S {
+    width: 60%;
+    margin: 100px auto 40px auto;
     display: flex;
-    justify-content: center;
+    justify-content: space-evenly;
 }
-.s{
-    margin: 0 10px 0 10px;
+
+.s {
+    /* margin: 0 10px 0 10px; */
     color: #000000;
-    font-size: 24px;
+    font-size: var(--font);
     text-align: center;
     color: var(--color);
 }
-#mySelect{
+
+.all {
+    display: flex;
+    width: 60%;
+    height: var(--heigth);
+    border: 0px solid black;
+    border-radius: 40px;
+    background-color: var(--bg-color);
+    margin: 0 auto;
+    /*     box-shadow: 0px 0px 30px #dddddd; */
+    border: 1px #fff solid;
+}
+
+#mySelect {
     border-radius: 0;
-    width: 105px;
-    background-color: rgba(0,0,0,0);
+    background-color: rgba(0, 0, 0, 0);
     height: var(--heigth);
     border: 0px;
-    outline:none;
+    outline: none;
     margin: 0px;
     padding-left: 9px;
-    font-size: 24px;
+    font-size: var(--font);
     color: var(--color);
 }
-.button{
+
+.button {
     width: var(--heigth);
     height: var(--heigth);
     border-radius: 50%;
@@ -43,7 +59,7 @@ html{
     background-repeat: no-repeat;
 }
 
-#text{
+#text {
     width: 0;
     flex-grow: 1;
     height: var(--heigth);
@@ -51,36 +67,41 @@ html{
     padding-bottom: 0px;
     padding-left: 15px;
     border: 0px;
-    background-color: rgba(0,0,0,0);
-    outline:none;
-    font-size: 36px;
+    background-color: rgba(0, 0, 0, 0);
+    outline: none;
+    font-size: var(--font);
     color: var(--color);
 }
-.all{
-    display: flex;
+
+
+#suggestion {
+    margin: 0 auto;
     width: 60%;
-    height: var(--heigth);
-    border: 0px solid black;
-    border-radius: 40px;
-    background-color: var(--bg-color);
-    margin: 0 auto 0 auto;
-/*     box-shadow: 0px 0px 30px #dddddd; */
-    border: 1px #fff solid;
+}
+
+.sg_item {
+    margin: 8px;
 }
 
 @media (max-width:900px) {
-    .s{
-        font-size: 12px;
+    .s {
+        font-size: 16px;
     }
-    .all{
+
+    .all {
         width: 90%;
     }
 
-  }
-  
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --bg-color: #000;
-      --color: #fff;
+    #S {
+        margin: 0 0 140px 0;
+        width: 100%;
     }
-  }
+
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg-color: #000;
+        --color: #fff;
+    }
+}
