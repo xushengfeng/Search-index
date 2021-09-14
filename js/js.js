@@ -41,8 +41,10 @@ search = { // 引擎列表
         "京东": "https://search.jd.com/Search?keyword=%s"
     },
     '翻译': {
-        "en-cn": "https://translate.google.cn/#view=home&op=translate&sl=en&tl=zh-CN&text=%s",
-        "cn-en": "https://translate.google.cn/#view=home&op=translate&sl=zh-CN&tl=en&text=%s"
+        "英译中": "https://translate.google.cn/#view=home&op=translate&sl=en&tl=zh-CN&text=%s",
+        "中译英": "https://translate.google.cn/#view=home&op=translate&sl=zh-CN&tl=en&text=%s",
+        "deepl中英":"https://www.deepl.com/translator#zh/en/%s",
+        "deepl英中":"https://www.deepl.com/translator#en/zh/%s"
     }
 }
 Stext = ''
