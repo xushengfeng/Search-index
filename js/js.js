@@ -10,6 +10,7 @@ search = { // 引擎列表
         "夸克": "https://quark.sm.cn/s?q=%s"
     },
     '图片': {
+        "谷歌": "https://www.google.com/search?q=%s&tbm=isch",
         "百度": "https://image.baidu.com/search/index?tn=baiduimage&word=%s",
         "必应": "https://cn.bing.com/images/search?q=%s"
     },
