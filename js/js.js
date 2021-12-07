@@ -73,7 +73,7 @@ function choose(chanse) {
         }
     }
     Select.innerHTML = html;
-    document.querySelector('#text').focus()
+    document.querySelector("#text").focus();
 }
 choose("综合");
 
@@ -143,10 +143,14 @@ document.onkeyup = function (e) {
     var key = e.key;
     if (key == "Enter") {
         // 搜索
+        if (select_sg_i != -1) {
+            document.querySelector("#text").value =
+                document.querySelectorAll("#suggestion > div")[select_sg_i].innerText;
+        }
         go();
     } else if (key == "/") {
         // 聚焦
-        document.querySelector("#text").focus()
+        document.querySelector("#text").focus();
     }
     if (e.ctrlKey) {
         // 切引擎
@@ -174,17 +178,25 @@ document.onkeyup = function (e) {
 };
 
 function sg_c(v) {
+    document.querySelector("#text").blur();
     var select_sg_i_o = select_sg_i;
     var all = document.querySelectorAll("#suggestion > div").length;
     if (v == "up") {
-        if (select_sg_i == -1 || select_sg_i == 0) {
+        if (select_sg_i == -1) {
             select_sg_i = all - 1;
         } else {
-            select_sg_i = (select_sg_i - 1) % all;
+            select_sg_i = select_sg_i - 1;
         }
     } else {
-        select_sg_i = (select_sg_i + 1) % all;
+        select_sg_i = select_sg_i + 1;
+        if (select_sg_i == all) select_sg_i = -1;
     }
+    if (select_sg_i == -1) document.querySelector("#text").focus();
     document.querySelectorAll("#suggestion > div")[select_sg_i_o]?.classList.remove("sg_s");
-    document.querySelectorAll("#suggestion > div")[select_sg_i].classList.add("sg_s");
+    document.querySelectorAll("#suggestion > div")[select_sg_i]?.classList.add("sg_s");
 }
+
+document.querySelector("#text").onfocus = () => {
+    document.querySelectorAll("#suggestion > div")[select_sg_i]?.classList.remove("sg_s");
+    select_sg_i = -1;
+};
