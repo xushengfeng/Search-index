@@ -124,7 +124,9 @@ document.getElementById("text").oninput = () => {
 };
 
 // 搜索建议展示
+select_sg_i = -1;
 function show_sg(suggestion_data) {
+    select_sg_i = -1;
     var x = "";
     for (i in suggestion_data.s) {
         x +=
@@ -170,5 +172,29 @@ document.onkeyup = function (e) {
                 $("#mySelect").val($("#mySelect option").first().val());
             }
         }
+    } else {
+        if (key == 38) {
+            // 向上切建议
+            sg_c("up");
+        } else if (key == 40) {
+            // 向下切建议
+            sg_c("down");
+        }
     }
 };
+
+function sg_c(v) {
+    var select_sg_i_o = select_sg_i;
+    var all = document.querySelectorAll("#suggestion > div").length;
+    if (v == "up") {
+        if (select_sg_i == -1 || select_sg_i == 0) {
+            select_sg_i = all - 1;
+        } else {
+            select_sg_i = (select_sg_i - 1) % all;
+        }
+    } else {
+        select_sg_i = (select_sg_i + 1) % all;
+    }
+    document.querySelectorAll("#suggestion > div")[select_sg_i_o]?.classList.remove("sg_s");
+    document.querySelectorAll("#suggestion > div")[select_sg_i].classList.add("sg_s");
+}

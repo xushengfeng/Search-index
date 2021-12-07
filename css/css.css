@@ -57,6 +57,7 @@ html {
     background-position: center;
     background-size: 60%;
     background-repeat: no-repeat;
+    cursor: pointer;
 }
 
 #text {
@@ -73,17 +74,26 @@ html {
     color: var(--color);
 }
 
-
 #suggestion {
     margin: 0 auto;
     width: 60%;
 }
 
 .sg_item {
-    margin: 8px;
+    transition: 0.3s;
+    padding: 8px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+.sg_item:hover {
+    background-color: var(--shadow-color);
 }
 
-@media (max-width:900px) {
+.sg_s {
+    background-color: var(--shadow-color);
+}
+
+@media (max-width: 900px) {
     .s {
         font-size: 16px;
     }
@@ -96,7 +106,6 @@ html {
         margin: 0 0 140px 0;
         width: 100%;
     }
-
 }
 
 @media (prefers-color-scheme: dark) {
