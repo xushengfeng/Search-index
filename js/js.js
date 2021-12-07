@@ -51,8 +51,7 @@ search = {
 };
 Stext = "";
 for (i in search) {
-    ii = "'" + i + "'";
-    Stext += '<a onclick="choose(' + ii + ')"><div class="s" id="' + i + '">' + i + "</div></a>";
+    Stext += `<a onclick="choose('${i}')"><div class="s" id="${i}">${i}</div></a>`;
 }
 document.getElementById("S").innerHTML = Stext;
 
@@ -68,9 +67,9 @@ function choose(chanse) {
     html = "";
     for (n in search[chanse]) {
         if (localStorage.indexEngine == n) {
-            html += '<option selected value="' + search[chanse][n] + '">' + n + "</option>";
+            html += `<option selected value="${search[chanse][n]}">${n}</option>`;
         } else {
-            html += '<option value="' + search[chanse][n] + '">' + n + "</option>";
+            html += `<option value="${search[chanse][n]}">${n}</option>`;
         }
     }
     Select.innerHTML = html;
@@ -110,8 +109,7 @@ document.getElementById("text").oninput = () => {
     if (document.getElementById("text").value != "") {
         $.ajax({
             async: false,
-            url:
-                "http://suggestion.baidu.com/su?wd=" + document.getElementById("text").value + "&json=1&p=3&cb=show_sg",
+            url: `http://suggestion.baidu.com/su?wd=${document.getElementById("text").value}&json=1&p=3&cb=show_sg`,
             type: "GET",
             dataType: "jsonp",
             error: (data) => {
@@ -129,12 +127,7 @@ function show_sg(suggestion_data) {
     select_sg_i = -1;
     var x = "";
     for (i in suggestion_data.s) {
-        x +=
-            '<div class="sg_item" onclick="go_sg(&#39;' +
-            suggestion_data.s[i] +
-            '&#39;)">' +
-            suggestion_data.s[i] +
-            "</div>";
+        x += `<div class="sg_item" onclick="go_sg('${suggestion_data.s[i]}')">${suggestion_data.s[i]}</div>`;
     }
     document.getElementById("suggestion").innerHTML = x;
 }
@@ -147,25 +140,23 @@ function go_sg(link) {
 
 // 快捷键
 document.onkeyup = function (e) {
-    var event = e || window.event;
-    var key = event.which || event.keyCode || event.charCode;
-    if (key == 13) {
-        // enter搜索
+    var key = e.key;
+    if (key == "Enter") {
+        // 搜索
         go();
-    } else if (key == 191) {
-        // /聚焦
+    } else if (key == "/") {
+        // 聚焦
         $("#text").focus();
     }
     if (e.ctrlKey) {
-        if (key == 38) {
-            // 向上切引擎
+        // 切引擎
+        if (key == "ArrowUp") {
             if ($("#mySelect option:selected").prev().val() != undefined) {
                 $("#mySelect").val($("#mySelect option:selected").prev().val());
             } else {
                 $("#mySelect").val($("#mySelect option").last().val());
             }
-        } else if (key == 40) {
-            // 向下切引擎
+        } else if (key == "ArrowDown") {
             if ($("#mySelect option:selected").next().val() != undefined) {
                 $("#mySelect").val($("#mySelect option:selected").next().val());
             } else {
@@ -173,11 +164,10 @@ document.onkeyup = function (e) {
             }
         }
     } else {
-        if (key == 38) {
-            // 向上切建议
+        // 切建议
+        if (key == "ArrowUp") {
             sg_c("up");
-        } else if (key == 40) {
-            // 向下切建议
+        } else if (key == "ArrowDown") {
             sg_c("down");
         }
     }
