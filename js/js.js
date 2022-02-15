@@ -58,7 +58,9 @@ document.querySelector("#S").innerHTML = Stext;
 Select = document.querySelector("#mySelect");
 
 // 切换搜索项目
+var t_chanse;
 function choose(chanse) {
+    t_chanse = chanse;
     $(".s").each(function () {
         this.style.color = "#0008";
     });
@@ -88,10 +90,10 @@ function go() {
         "g"
     );
 
-    if (re.test(text)) {
+    if (re.test(text) && !text.match(/ /g)) {
         window.open("https://" + text);
     } else {
-        window.open(y[x].value.replace("%s", text));
+        window.open(y[x].value.replace("%s", encodeURIComponent(text)));
     }
 
     localStorage.indexEngine = y[x].innerHTML;
@@ -109,7 +111,9 @@ document.querySelector("#text").oninput = () => {
     if (document.querySelector("#text").value != "") {
         $.ajax({
             async: false,
-            url: `http://suggestion.baidu.com/su?wd=${document.querySelector("#text").value}&json=1&p=3&cb=show_sg`,
+            url: `http://suggestion.baidu.com/su?wd=${encodeURIComponent(
+                document.querySelector("#text").value
+            )}&json=1&p=3&cb=show_sg`,
             type: "GET",
             dataType: "jsonp",
             error: (data) => {
